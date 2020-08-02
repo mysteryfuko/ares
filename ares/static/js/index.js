@@ -79,6 +79,93 @@ function get_data(act,e,name){
                   },
       });    
     }
+
+    if(act == "loot"){
+      var dkplogsTable = $('#dkplogsTable').DataTable({
+        pageLength: 50,
+        order: [ [ 0, 'desc' ] ],
+        "ajax": {
+          url:"ajax/dkp",
+          dataSrc: "data",
+          data:{"belong":e}
+        },
+        "columns":[
+          {data:"time"},
+          {data:"name"},
+          {data:"class"},
+          {data:"dkp"},
+          {data:""}
+        ],
+        "columnDefs":[
+          {
+            "render":function (data,type,row){
+              return '<a href="https://cn.classic.wowhead.com/item=' + row["item"] + '/" class="icontinyl q4" data-wh-icon-added="true" ><span></span></a>'
+            },
+            "targets":4
+          },
+          {
+            "render":function (data,type,row){
+              if (row['class'] == "DRUID"){
+                return "德鲁伊"
+              }
+              else if (row['class'] == "HUNTER"){
+                return "猎人"
+              }
+              else if (row['class'] == "WARRIOR"){
+                return "战士"
+              }
+              else if (row['class'] == "ROGUE"){
+                return "盗贼"
+              }
+              else if (row['class'] == "MAGE"){
+                return "法师"
+              }
+              else if (row['class'] == "PRIEST"){
+                return "牧师"
+              }
+              else if (row['class'] == "WARLOCK"){
+                return "术士"
+              }
+              else if (row['class'] == "PALADIN"){
+                return "圣骑士"
+              }                  
+            },
+            "targets":2
+          }
+        ],
+        //每行回调函数  
+        "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) { 
+                      //动态设置class属性
+                      $('td:eq(1)',nRow).attr("class",aData['class'])
+                  },
+       });      
+    }
+
+    if(act =="add"){
+      var dkplogsTable1 = $('#dkplogsTable1').DataTable({
+        pageLength: 50,
+        order: [ [ 3, 'desc' ] ],
+        "ajax": {
+          url:"ajax/dkp",
+          dataSrc: "data",
+          data:{"belong":e}
+        },
+        "columns":[
+          {data:"name"},
+          {data:"dkp"},
+          {data:"player"},
+          {data:"time"},
+        ],    
+        "columnDefs":[
+          {
+            "render":function (data,type,row){
+              return "<a href=\"kill\\" + row['id'] + "\" style=\"color: black\">" + row["name"] +"</a>"
+            },
+            "targets":0
+          },
+        ],        
+      }); 
+    }
   }
   else
   {

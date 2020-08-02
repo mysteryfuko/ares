@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-class player(models.Model):
+class playerEPGP(models.Model):
   id = models.AutoField(primary_key=True)
   name = models.CharField(max_length=20)
   job = models.CharField(max_length=10,default="WARRIOR")
@@ -21,18 +21,27 @@ class DKPtable(models.Model):
   id = models.AutoField(primary_key=True)
   name = models.CharField(max_length=20)
 
+class playerDKP(models.Model):
+  id = models.AutoField(primary_key=True)
+  name = models.CharField(max_length=20)
+  job = models.CharField(max_length=10,default="WARRIOR")
+  dkp = models.IntegerField()
+  belong = models.IntegerField()
+
 class DKPLoot(models.Model):
   time = models.DateField(auto_now_add=True)
   item = models.IntegerField()
   belong = models.IntegerField()
-  whois = models.IntegerField()
+  Player = models.TextField()
   dkp = models.IntegerField()
+  job = models.CharField(max_length=10,default="WARRIOR")
   
 class DKPadd(models.Model):
   time = models.DateField(auto_now_add=True)
-  item = models.DateTimeField()
+  AddEvent = models.TextField()
+  PlayerNum = models.IntegerField()
   belong = models.IntegerField()
-  whois = models.TextField(null=True)
+  Player = models.TextField()
   dkp = models.IntegerField()
 
 class user(models.Model):

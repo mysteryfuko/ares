@@ -1303,3 +1303,50 @@ Not Found: /announce.php
 [pid: 26|app: 0|req: 4/16] 172.17.0.1 () {34 vars in 834 bytes} [Tue Jul 21 04:53:44 2020] GET /announce.php?info_hash=%A1j%0A%F9%A0%ADLg%B6%F5%18%5E%19%A4%2B%B3B%F6Q3&peer_id=-XL0012-%F6%CA%B1%9A%88L%D4%C8%02%22h%8A&ip=192.168.0.2&port=15000&uploaded=0&downloaded=0&left=1351133152&numwant=200&key=6285&compact=1&event=started => generated 2557 bytes in 5 msecs (HTTP/1.0 404) 4 headers in 129 bytes (1 switches on core 0)
 Not Found: /announce.php
 [pid: 27|app: 0|req: 4/17] 172.17.0.1 () {34 vars in 834 bytes} [Tue Jul 21 04:53:44 2020] GET /announce.php?info_hash=%A1j%0A%F9%A0%ADLg%B6%F5%18%5E%19%A4%2B%B3B%F6Q3&peer_id=-XL0012-%F6%CA%B1%9A%88L%D4%C8%02%22h%8A&ip=192.168.0.2&port=15000&uploaded=0&downloaded=0&left=1351133152&numwant=200&key=6471&compact=1&event=started => generated 2557 bytes in 7 msecs (HTTP/1.0 404) 4 headers in 129 bytes (1 switches on core 0)
+*** Starting uWSGI 2.0.19.1 (64bit) on [Mon Jul 27 03:16:32 2020] ***
+compiled with version: 8.3.0 on 20 July 2020 10:00:56
+os: Linux-4.19.76-linuxkit #1 SMP Tue May 26 11:42:35 UTC 2020
+nodename: 5d70340e2b94
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 2
+current working directory: /home/ares
+writing pidfile to /home/ares/log/uwsgi.pid
+detected binary path: /usr/local/bin/uwsgi
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+chdir() to /home/ares
+your memory page size is 4096 bytes
+detected max file descriptor number: 1048576
+lock engine: pthread robust mutexes
+thunder lock: enabled
+uwsgi socket 0 bound to TCP address 0.0.0.0:8000 fd 3
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+Python version: 3.7.8 (default, Jun 30 2020, 18:27:23)  [GCC 8.3.0]
+Python main interpreter initialized at 0x55f15a5f5390
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 658704 bytes (643 KB) for 5 cores
+*** Operational MODE: preforking ***
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x55f15a5f5390 pid: 19 (default app)
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 19)
+spawned uWSGI worker 1 (pid: 20, cores: 1)
+spawned uWSGI worker 2 (pid: 21, cores: 1)
+spawned uWSGI worker 3 (pid: 22, cores: 1)
+spawned uWSGI worker 4 (pid: 23, cores: 1)
+spawned uWSGI worker 5 (pid: 24, cores: 1)
+[pid: 20|app: 0|req: 1/1] 172.17.0.1 () {42 vars in 745 bytes} [Mon Jul 27 03:16:35 2020] GET / => generated 6605 bytes in 86 msecs (HTTP/1.1 200) 4 headers in 137 bytes (1 switches on core 0)
+[pid: 21|app: 0|req: 1/2] 172.17.0.1 () {42 vars in 726 bytes} [Mon Jul 27 03:16:36 2020] GET /ajax/epgp?_=1595819795404 => generated 0 bytes in 20 msecs (HTTP/1.1 301) 4 headers in 165 bytes (1 switches on core 0)
+Not Found: /favicon.ico
+[pid: 22|app: 0|req: 1/3] 172.17.0.1 () {40 vars in 653 bytes} [Mon Jul 27 03:16:36 2020] GET /favicon.ico => generated 2287 bytes in 29 msecs (HTTP/1.1 404) 4 headers in 129 bytes (1 switches on core 0)
+[pid: 23|app: 0|req: 1/4] 172.17.0.1 () {42 vars in 728 bytes} [Mon Jul 27 03:16:36 2020] GET /ajax/epgp/?_=1595819795404 => generated 12 bytes in 23 msecs (HTTP/1.1 200) 4 headers in 135 bytes (1 switches on core 0)
+[pid: 24|app: 0|req: 1/5] 172.17.0.1 () {42 vars in 745 bytes} [Mon Jul 27 03:17:12 2020] GET / => generated 6721 bytes in 45 msecs (HTTP/1.1 200) 4 headers in 137 bytes (1 switches on core 0)
+[pid: 20|app: 0|req: 2/6] 172.17.0.1 () {42 vars in 726 bytes} [Mon Jul 27 03:17:12 2020] GET /ajax/epgp?_=1595819832099 => generated 0 bytes in 1 msecs (HTTP/1.1 301) 4 headers in 165 bytes (1 switches on core 0)
+[pid: 21|app: 0|req: 2/7] 172.17.0.1 () {42 vars in 728 bytes} [Mon Jul 27 03:17:12 2020] GET /ajax/epgp/?_=1595819832099 => generated 12 bytes in 12 msecs (HTTP/1.1 200) 4 headers in 135 bytes (1 switches on core 0)
+[pid: 22|app: 0|req: 2/8] 172.17.0.1 () {42 vars in 745 bytes} [Mon Jul 27 03:17:16 2020] GET / => generated 6721 bytes in 22 msecs (HTTP/1.1 200) 4 headers in 137 bytes (1 switches on core 0)
+[pid: 23|app: 0|req: 2/9] 172.17.0.1 () {42 vars in 726 bytes} [Mon Jul 27 03:17:16 2020] GET /ajax/epgp?_=1595819836174 => generated 0 bytes in 1 msecs (HTTP/1.1 301) 4 headers in 165 bytes (1 switches on core 0)
+[pid: 24|app: 0|req: 2/10] 172.17.0.1 () {42 vars in 728 bytes} [Mon Jul 27 03:17:16 2020] GET /ajax/epgp/?_=1595819836174 => generated 12 bytes in 7 msecs (HTTP/1.1 200) 4 headers in 135 bytes (1 switches on core 0)
