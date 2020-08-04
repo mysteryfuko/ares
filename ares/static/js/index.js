@@ -23,7 +23,7 @@ function get_data(act,e,name){
     if(act == "score"){
       var dkpTable = $('#dkpTable').DataTable({
         pageLength: 50,
-        "destroy": true,
+        retrieve: true,
         order: [ [ 2, 'desc' ] ],
         "ajax": {
           url:"ajax/dkp",
@@ -147,6 +147,7 @@ function get_data(act,e,name){
 
     if(act =="add"){
       var dkplogsTable1 = $('#dkplogsTable1').DataTable({
+        retrieve: true,
         pageLength: 50,
         order: [ [ 3, 'desc' ] ],
         "ajax": {
