@@ -106,7 +106,10 @@ def ajax(request,action):
       json_dict["boss"] = i.boss
       json_dict["dkp"] = i.dkp
       json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
-      json_dict["player"] = len(i.Player.split(','))-1
+      playerNum = len(i.Player.split(','))-1
+      if playerNum == 0:
+        playerNum = 1
+      json_dict["player"] = playerNum
       json_list.append(json_dict)
     data ={"data":json_list}
     return HttpResponse(json.dumps(data))
