@@ -29,17 +29,15 @@ class playerDKP(models.Model):
   belong = models.IntegerField()
 
 class DKPLoot(models.Model):
-  time = models.DateField(auto_now_add=True)
+  time = models.DateTimeField()
   item = models.IntegerField()
   belong = models.IntegerField()
   Player = models.TextField()
   dkp = models.IntegerField()
-  job = models.CharField(max_length=10,default="WARRIOR")
   
 class DKPadd(models.Model):
-  time = models.DateField(auto_now_add=True)
-  AddEvent = models.TextField()
-  PlayerNum = models.IntegerField()
+  time = models.DateTimeField()
+  boss = models.TextField()
   belong = models.IntegerField()
   Player = models.TextField()
   dkp = models.IntegerField()

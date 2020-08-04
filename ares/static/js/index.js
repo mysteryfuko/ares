@@ -83,9 +83,10 @@ function get_data(act,e,name){
     if(act == "loot"){
       var dkplogsTable = $('#dkplogsTable').DataTable({
         pageLength: 50,
+        retrieve: true,
         order: [ [ 0, 'desc' ] ],
         "ajax": {
-          url:"ajax/dkp",
+          url:"ajax/dkploot",
           dataSrc: "data",
           data:{"belong":e}
         },
@@ -138,7 +139,10 @@ function get_data(act,e,name){
                       //动态设置class属性
                       $('td:eq(1)',nRow).attr("class",aData['class'])
                   },
-       });      
+       });
+       dkplogsTable.on( 'draw', function () {
+        refreshLink();
+      } );      
     }
 
     if(act =="add"){
@@ -146,12 +150,12 @@ function get_data(act,e,name){
         pageLength: 50,
         order: [ [ 3, 'desc' ] ],
         "ajax": {
-          url:"ajax/dkp",
+          url:"ajax/dkpadd",
           dataSrc: "data",
           data:{"belong":e}
         },
         "columns":[
-          {data:"name"},
+          {data:"boss"},
           {data:"dkp"},
           {data:"player"},
           {data:"time"},
@@ -159,7 +163,7 @@ function get_data(act,e,name){
         "columnDefs":[
           {
             "render":function (data,type,row){
-              return "<a href=\"kill\\" + row['id'] + "\" style=\"color: black\">" + row["name"] +"</a>"
+              return "<a href=\"kill\\" + row['id'] + "\" style=\"color: black\">" + row["boss"] +"</a>"
             },
             "targets":0
           },
@@ -334,6 +338,10 @@ function refreshLink(){
 
 $(document).ready(function () {
   selectTab(null, "EpgpTab","score")
+  $("#TabEPGP").show();
+  $("#EPGP").addClass("active");
+  $("#TabEPGP>button:eq(0)").addClass("active");
+  $("#TabDKP").hide();
   $("#EPGP").mouseover(function(){
     tablinks = $(".tablinks");
     for (i = 0; i < tablinks.length; i++) {

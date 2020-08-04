@@ -4,7 +4,7 @@ import json
 from django.db.models import Sum
 # Create your views here.
 def index(request):
-  dkp = DKPtable.objects.all()
+  dkp = models.DKPtable.objects.all()
   return render(request,'index.html',{'dkp':dkp})
 
 def ajax(request,action):
@@ -31,7 +31,10 @@ def ajax(request,action):
       json_dict["id"] = i.id      
       json_dict["item"] = i.item
       json_dict["gp"] = i.gp
-      json_dict["class"] = models.playerEPGP.objects.get(name=i.name).job
+      try:
+        json_dict["class"] = models.playerEPGP.objects.get(name=i.name).job
+      except BaseException:
+        json_dict["class"] = "WARRIOR"
       json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
       json_dict["name"] = i.name
       json_list.append(json_dict)
@@ -49,7 +52,7 @@ def ajax(request,action):
       json_dict["boss"] = i.boss
       json_dict["ep"] = i.ep
       json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
-      json_dict["player"] = len(i.name.split(',')-1)
+      json_dict["player"] = len(i.name.split(','))-1
       json_list.append(json_dict)
     for i in KillLog:
       json_dict = {}
@@ -57,7 +60,7 @@ def ajax(request,action):
       json_dict["boss"] = i.boss
       json_dict["ep"] = i.ep
       json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
-      json_dict["player"] = len(i.name.split(',')-1)
+      json_dict["player"] = len(i.name.split(','))-1
       json_list.append(json_dict)
     data ={"data":json_list}
     return HttpResponse(json.dumps(data))
@@ -82,10 +85,28 @@ def ajax(request,action):
     for i in dkp_loot:
       json_dict = {}
       json_dict["item"] = i.item
-      json_dict["time"] = i.time
+      json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
       json_dict["dkp"] = i.dkp
-      json_dict["name"] = i.name
-      json_dict["class"] = i.job
+      json_dict["name"] = i.Player
+      try:
+        json_dict["class"] = models.playerEPGP.objects.get(name=i.Player).job
+      except BaseException:
+        json_dict["class"] = "WARRIOR"
+      json_list.append(json_dict)
+    data ={"data":json_list}
+    return HttpResponse(json.dumps(data))
+
+  if action =="dkpadd":
+    belong = request.GET['belong']
+    dkp_add = models.DKPadd.objects.filter(belong=belong).all()
+    json_list = []
+    for i in dkp_add:
+      json_dict = {}
+      json_dict["id"] = i.id      
+      json_dict["boss"] = i.boss
+      json_dict["dkp"] = i.dkp
+      json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
+      json_dict["player"] = len(i.Player.split(','))-1
       json_list.append(json_dict)
     data ={"data":json_list}
     return HttpResponse(json.dumps(data))
