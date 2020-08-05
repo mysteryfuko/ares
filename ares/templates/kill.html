@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ares公会活动分数</title>
+    <!--table-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+    <script crossorigin="anonymous" integrity="sha384-fJU6sGmyn07b+uD1nMk7/iSb4yvaowcueiQhfVgQuD98rfva8mcr1eSvjchfpMrH" src="https://lib.baomitu.com/jquery/3.3.1/jquery.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/rowgroup/1.1.1/js/dataTables.rowGroup.min.js"></script>
+    <!--wowhead-->
+    <script>var whTooltips = {colorLinks: true, iconizeLinks: true, renameLinks: true};</script>
+    <script src="https://wow.zamimg.com/widgets/power.js"></script>
+    <style>
+               .HUNTER {
+            background-color: #aad372!important;
+        }
+                .WARRIOR {
+            background-color: #c69b6d!important;
+        }
+                .ROGUE {
+            background-color: #fff468!important;
+        }
+                .MAGE {
+            background-color: #3fc6ea!important;
+        }
+                .PRIEST {
+            background-color: #ffffff!important;
+        }
+                .WARLOCK {
+            background-color: #8787ed!important;
+        }
+                .DRUID {
+            background-color: #ff7c0a!important;
+        }
+                .PALADIN {
+            background-color: #f48cba!important;
+        }
+                .SHAMAN {
+            background-color: #0270dd!important;
+        }
+                .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+      
+        /* Style the buttons that are used to open the tab content */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #ccc;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+            
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+  <H1>Ares - {{boss}}</H1>
+  <div class="tab">
+    <a href="/"><button class="tablinks" >主页</button></a>
+  </div>
+  <div id="LogsTab" class="tabcontent">
+    <table id="logsTable" class="display" style="width:100%">
+      <thead>
+        <tr>
+          <th width="20%">时间</th>
+          <th width="20%">原因</th>
+          <th width="10%">
+          {% if dkp %}
+          DKP变化
+          {% else %}
+          EP变化
+          {% endif %}
+          </th>
+          <th>参与人员</th>
+        </tr>
+      </thead>    
+
+      <tr  role="row" class="odd">
+        <th>{{time}}</th>
+        <th>{{boss}}</th>
+        <th>
+        {% if ep %}
+        +{{ep}}
+        {% elif dkp %}
+        +{{dkp}}
+        {% else %}
+        EPGP{{boss}}
+        {% endif %}
+        </th>
+        <th>
+        {% for i in name %}
+        <a href="/PlayerDetail/{{i}}">{{i}}</a>&nbsp;&nbsp;
+        {% endfor %}
+        </th>
+      </tr>
+      <tfoot>
+        <tr>
+          <th>时间</th>
+          <th>名字</th>
+          <th width="10%">
+          {% if dkp %}
+          DKP变化
+          {% else %}
+          EP变化
+          {% endif %}
+          </th>
+          <th>参与人员</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+      var logsTable = $('#logsTable').DataTable({
+            pageLength: 50,
+            order: [ [ 0, 'desc' ] ],
+            
+        });  
+    });
+</script>
+</body>
+</html>
