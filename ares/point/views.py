@@ -113,3 +113,49 @@ def ajax(request,action):
       json_list.append(json_dict)
     data ={"data":json_list}
     return HttpResponse(json.dumps(data))
+
+  if action =="Playerdkplog":
+    belong = request.GET['belong']
+    name = request.GET['name']
+    loot_logs = models.DKPLoot.objects.filter(belong=belong,Player=name).all()
+    logs = models.DKPadd.objects.extra(where=['"point_DKPadd"."belong" ='+belong+' AND "point_DKPadd"."Player" LIKE "'+str(name)+',%%") OR ("point_DKPadd"."belong" ='+belong+' AND "point_DKPadd"."Player" = "' + str(name) +'") OR("point_DKPadd"."belong" ='+belong+' AND "point_DKPadd"."Player" LIKE "%%,'+str(name)+',%%"'])
+    json_list = []
+    for i in logs:
+      json_dict = {}
+      json_dict["name"] = name
+      json_dict["activeID"] = i.id      
+      json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
+      json_dict["dkp"] = i.dkp
+      json_dict["active"] = i.boss 
+      json_list.append(json_dict)
+    for i in loot_logs:
+      json_dict = {}
+      json_dict["name"] = name   
+      json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
+      json_dict["dkp"] = i.dkp
+      json_dict["item"] = i.item 
+      json_list.append(json_dict)
+    data ={"data":json_list}
+    return HttpResponse(json.dumps(data))
+
+  if action == "Playerepgplog":
+    name = request.GET["name"]
+    logs = models.epgp.objects.extra(where=['"point_epgp"."name" LIKE "'+str(name)+',%%") OR ("point_epgp"."name" = "' + str(name) +'") OR("point_epgp"."name" LIKE "%%,'+str(name)+',%%"'])
+    json_list = []
+    for i in logs:
+      json_dict = {}
+      json_dict["name"] = name
+      json_dict["activeID"] = i.id      
+      json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
+      json_dict["ep"] = i.ep
+      json_dict["gp"] = i.gp
+      json_dict["item"] = i.item 
+      json_dict["active"] = i.boss 
+      json_list.append(json_dict)
+    data ={"data":json_list}
+
+    return HttpResponse(json.dumps(data))
+
+def PlayerDetail(request,name):
+  dkp = models.DKPtable.objects.all()
+  return render(request,'PlayerDetail.html',{'dkp':dkp,'name':name})
