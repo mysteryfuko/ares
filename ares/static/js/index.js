@@ -23,7 +23,7 @@ function selectTab(event, name,act,e) {
       if(act == "score"){
         var dkpTable = $('#dkpTable').DataTable({
           pageLength: 50,
-          retrieve: true,
+          destroy:true,
           order: [ [ 2, 'desc' ] ],
           "ajax": {
             url:"ajax/dkp",
@@ -83,7 +83,7 @@ function selectTab(event, name,act,e) {
       if(act == "loot"){
         var dkplogsTable = $('#dkplogsTable').DataTable({
           pageLength: 50,
-          retrieve: true,
+          destroy:true,
           order: [ [ 0, 'desc' ] ],
           "ajax": {
             url:"ajax/dkploot",
@@ -103,6 +103,12 @@ function selectTab(event, name,act,e) {
                 return '<a href="https://cn.classic.wowhead.com/item=' + row["item"] + '/" class="icontinyl q4" data-wh-icon-added="true" ><span></span></a>'
               },
               "targets":4
+            },
+            {
+              "render":function (data,type,row){
+                return "<a href=\"PlayerDetail\\" + row['name'] + "\" style=\"color: black\">" + row["name"] +"</a>"
+              },
+              "targets":1
             },
             {
               "render":function (data,type,row){
@@ -147,7 +153,7 @@ function selectTab(event, name,act,e) {
   
       if(act =="add"){
         var dkplogsTable1 = $('#dkplogsTable1').DataTable({
-          retrieve: true,
+          destroy:true,
           pageLength: 50,
           order: [ [ 3, 'desc' ] ],
           "ajax": {
@@ -256,6 +262,12 @@ function selectTab(event, name,act,e) {
                 return '<a href="https://cn.classic.wowhead.com/item=' + row["item"] + '/" class="icontinyl q4" data-wh-icon-added="true" ><span></span></a>'
               },
               "targets":4
+            },
+            {
+              "render":function (data,type,row){
+                return "<a href=\"PlayerDetail\\" + row['name'] + "\" style=\"color: black\">" + row["name"] +"</a>"
+              },
+              "targets":1
             },
             {
               "render":function (data,type,row){

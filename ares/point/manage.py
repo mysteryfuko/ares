@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import json
 import datetime
+from . import models
 from django.core import serializers
 import os
 from django.http import HttpResponse, Http404, FileResponse
@@ -10,6 +11,8 @@ from django.db import connection
 import xlrd
 import requests,time,zipfile,sqlite3
 from django.db.models import F,Q
+
+
 def login(request):
   if request.session.get('is_login', None):  # 不允许重复登录
     return redirect('manage/index/')
@@ -20,7 +23,7 @@ def login(request):
       username = login_form.cleaned_data.get('username')
       password = login_form.cleaned_data.get('password')
       try:
-        user1 = user.objects.get(name=username)
+        user1 = models.user.objects.get(name=username)
       except :
         print(connection.queries)
         message = '用户不存在！'
@@ -56,6 +59,8 @@ def do_loot(request):
         zp.close()
 
         wb = xlrd.open_workbook(new_loot_file)#打开文件
+
+        #read epgp loot
         sheet1 = wb.sheet_by_index(0)
         list_item_data = sheet1.col_values(0)
         list_gp_data = sheet1.col_values(1)
@@ -77,7 +82,7 @@ def do_loot(request):
             else:
               return HttpResponse(i['name']+"名字输入不正确 请检查")
 
-
+        #read dkp loot 1
         sheet2 = wb.sheet_by_index(1)
         list_item_data1 = sheet2.col_values(0)
         list_dkp_data = sheet2.col_values(1)
@@ -98,7 +103,7 @@ def do_loot(request):
               score.objects.filter(name=i['name']).update(dkp=F('dkp')-int(i['dkp']))
             else:
               return HttpResponse(i['name']+"名字输入不正确 请检查")
-        #update point_score set gp=0 where gp <0
+
 
 
 

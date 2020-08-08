@@ -14,7 +14,6 @@
     <!--wowhead-->
     <script>var whTooltips = {colorLinks: true, iconizeLinks: true, renameLinks: true};</script>
     <script src="https://wow.zamimg.com/widgets/power.js"></script>
-    <script src="{% static 'js/index.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
 <html>
 </head>
@@ -91,7 +90,7 @@
     }
 
     function getdata(name,e){
-      if(name == "EpgpLogsTab"){
+      if(name == "EpgpLogsTab"){        
         var epgplogsTable = $('#EpgplogsTable').DataTable({
             pageLength: 50,
             retrieve: true,
@@ -155,7 +154,7 @@
       else{
         var dkplogsTable = $('#dkplogsTable').DataTable({
             pageLength: 50,
-            retrieve: true,
+            destroy:true,
             order: [ [ 0, 'desc' ] ],
             "ajax": {"url":"/ajax/Playerdkplog","data":{"name":"{{name}}","belong":e},},
             "columns":[
@@ -210,7 +209,7 @@
 
 
     $(document).ready(function () {
-      selectTab(null, "dkpLogsTab",1)
+      selectTab(null, 'dkpLogsTab',1)
       $("#1").addClass("active")
     });
 </script>

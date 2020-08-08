@@ -1,6 +1,6 @@
 from django.urls import path
 from django.urls import include, path,re_path
-from . import views,manage
+from . import views,manage,api
 from django.conf import settings
 
 manage_patterns = [
@@ -10,7 +10,8 @@ manage_patterns = [
 
 urlpatterns = [
     path('', views.index),
-    path('ajax/<str:action>/',views.ajax),
+    path('ajax/<str:action>/',api.ajax),
+    path('api/<str:act>/',api.index),
     path('PlayerDetail/<str:name>/',views.PlayerDetail),
     path('kill/<str:act>/<int:bossid>/',views.kill),
     path('manage/',include(manage_patterns)), 

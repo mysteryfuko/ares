@@ -59,3 +59,21 @@
     border: 1px solid #ccc;
     border-top: none;
 }
+
+.SelectList
+{
+    position: relative;
+    background-color: transparent;
+    TOP:   -2px;
+    left:-2px;
+    border-width: 0px;
+    border-top-style: none; 
+    border-right-style: none; 
+    border-left-style: none; 
+    border-bottom-style: none;
+    display:block;
+    height: 20px;
+    overflow:hidden;
+    margin-left:40px;
+    width:200px
+}
