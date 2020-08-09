@@ -5,24 +5,19 @@ import time
 from .models import score,record,xiaohao
 import zipfile
 from django.db.models import F,Q
-api_key = "b917de504b076479bf04a6b648be6009"
-epgp = [
-  {'name':'鲁西弗隆','point':40},{'name':'玛格曼达','point':40},{'name':'基赫纳斯','point':40},{'name':'迦顿男爵','point':40},{'name':'沙斯拉尔','point':40},{'name':'加尔','point':40},{'name':'萨弗隆先驱者','point':40},{'name':'焚化者古雷曼格','point':40},{'name':'管理者埃克索图斯','point':40},{'name':'熔岩爆发','point':60}
-]
-dkp = [
-  {'name':'鲁西弗隆','point':2},{'name':'玛格曼达','point':2},{'name':'基赫纳斯','point':2},{'name':'迦顿男爵','point':2},{'name':'沙斯拉尔','point':2},{'name':'加尔','point':2},{'name':'萨弗隆先驱者','point':2},{'name':'焚化者古雷曼格','point':2},{'name':'管理者埃克索图斯','point':2},{'name':'熔岩爆发','point':4},{'name':'狂野的拉佐格尔','point':3},{'name':'堕落的瓦拉斯塔兹','point':3},{'name':'勒什雷尔','point':3},{'name':'费尔默','point':3},{'name':'埃博诺克','point':3},{'name':'弗莱格尔','point':3},{'name':'克洛玛古斯','point':3},{'name':'奈法利安','point':6}
-]
+import json
 
-dkp = [
-  {'name':'鲁西弗隆','belong':1,'dkp':[2,0,0]},{'name':'玛格曼达','belong':1},{'name':'基赫纳斯','belong':1},{'name':'迦顿男爵','point':2},{'name':'沙斯拉尔','point':2},{'name':'加尔','point':2},{'name':'萨弗隆先驱者','point':2},{'name':'焚化者古雷曼格','point':2},{'name':'管理者埃克索图斯','point':2},{'name':'熔岩爆发','point':4},{'name':'狂野的拉佐格尔','point':3},{'name':'堕落的瓦拉斯塔兹','point':3},{'name':'勒什雷尔','point':3},{'name':'费尔默','point':3},{'name':'埃博诺克','point':3},{'name':'弗莱格尔','point':3},{'name':'克洛玛古斯','point':3},{'name':'奈法利安','point':6}
-]
+
+api_key = "b917de504b076479bf04a6b648be6009"
+with open('setting.json','r')as fp:
+  set_json_data = json.load(fp)
 
 where_to_do = ""
 num = 0
 list_num = 1
 session = requests.Session()
-def get_data(url):
 
+def get_data(url):
   return_data = session.get(url)
   return return_data.json()
 
@@ -141,12 +136,6 @@ def get_fight_data(fight_id):
 
   return player_data
 
-
-if __name__ == "__main__":
-  ticks1 = time.time()
-  fightData,detail_list = get_fight_data('RYrfGz9XD3gNHBAT')
-  ticks2 = time.time()
-  print("耗时："+str(ticks2-ticks1)) 
       
 
 

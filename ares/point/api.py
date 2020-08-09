@@ -1,6 +1,7 @@
 from django.shortcuts import render,HttpResponse
 from . import models
-import json
+import json,time,zipfile
+from django.db.models import F,Q
 
 def index(request,act):
   if act == "getsmall":
@@ -48,6 +49,22 @@ def index(request,act):
     return HttpResponse("done")
 
 def ajax(request,action):
+  #EPGP衰减
+  if action =="do_epgp":
+    #备份
+    new_name = "./backup/decay" + str(time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())) + ".zip"
+    zp=zipfile.ZipFile(new_name,'w', zipfile.ZIP_DEFLATED)
+    zp.write("db.sqlite3")
+    zp.close()
+    #操作
+    models.playerEPGP.objects.update(ep=F('ep')*0.9,gp=((F('gp')+300)*0.9-300))
+    models.playerEPGP.objects.filter(Q(gp__lt=0)).update(gp=0)
+    decay_name = models.playerEPGP.objects.all()
+    decay_name_list = ""
+    for i in decay_name:
+      decay_name_list = decay_name_list + i.name + ","
+    models.epgp.objects.create(boss="衰减10%", time=str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())),name = decay_name_list)
+    return HttpResponse("done")
   #ajax返回epgp列表
   if action == "epgp":
     epgp_score = models.playerEPGP.objects.all()
