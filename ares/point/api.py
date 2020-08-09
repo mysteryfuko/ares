@@ -44,7 +44,7 @@ def index(request,act):
       fo.write(data)
       fo.close()
     except BaseException:
-      return HttpResponse("error")
+      return HttpResponse("error!")
     return HttpResponse("done")
 
 def ajax(request,action):

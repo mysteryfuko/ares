@@ -52,11 +52,11 @@ function get_load(){
               alert("添加小号成功");
               $("#new-dahao").val("");
               $("#new-xiaohao").val("");
-              $("table.table>tbody").empty();
+              $("#small_list.table>tbody").empty();
               $.ajax({url:"/api/getsmall",success:function(result){
                 var obj_json = JSON.parse(result);
                 for(var i in obj_json){
-                  $("table.table>tbody").append("<tr><td class='"+obj_json[i].class+"'>"+obj_json[i].dahao+"</td><td>"+obj_json[i].xiaohao+"</td></tr>")
+                  $("#small_list.table>tbody").append("<tr><td class='"+obj_json[i].class+"'>"+obj_json[i].dahao+"</td><td>"+obj_json[i].xiaohao+"</td></tr>")
                 }
               }});
             }else if(data == "error"){
@@ -67,7 +67,7 @@ function get_load(){
       $.ajax({url:"/api/getsmall",success:function(result){
         var obj_json = JSON.parse(result);
         for(var i in obj_json){
-          $("table.table>tbody").append("<tr><td class='"+obj_json[i].class+"'>"+obj_json[i].dahao+"</td><td>"+obj_json[i].xiaohao+"</td></tr>")
+          $("#small_list.table>tbody").append("<tr><td class='"+obj_json[i].class+"'>"+obj_json[i].dahao+"</td><td>"+obj_json[i].xiaohao+"</td></tr>")
         }
       }});
     }
