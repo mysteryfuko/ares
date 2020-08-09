@@ -37,6 +37,16 @@ def index(request,act):
       return HttpResponse("error")
     return HttpResponse("done")
 
+  if act == "setpoint":
+    data = request.POST['data']
+    try:
+      fo = open("setting.json", "w")
+      fo.write(data)
+      fo.close()
+    except BaseException:
+      return HttpResponse("error")
+    return HttpResponse("done")
+
 def ajax(request,action):
   #ajax返回epgp列表
   if action == "epgp":

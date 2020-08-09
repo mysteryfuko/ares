@@ -118,6 +118,27 @@ $(document).ready(function(){
   csrf = $('input[name="csrfmiddlewaretoken"]').val();
   get_load();
 
+  $("#submit_set_point").click(function(){
+    var set_data="";
+    $("#dkp_set tr").each(function(){
+      if(!set_data){
+        set_data = '[{"name" :"'+ $(this).find("th:nth-child(1)").text()+'","dkp":['+$(this).find("th:nth-child(2) input").val()+','+$(this).find("th:nth-child(3) input").val()+','+$(this).find("th:nth-child(4) input").val()+']}';      
+      }else{
+      set_data += ',{"name" :"'+ $(this).find("th:nth-child(1)").text()+'","dkp":['+$(this).find("th:nth-child(2) input").val()+','+$(this).find("th:nth-child(3) input").val()+','+$(this).find("th:nth-child(4) input").val()+']}';}
+    });
+    set_data += ']';
+    $.ajax({
+      type:"post",
+      url :"/api/setpoint/",
+      data: {"data":set_data,'csrfmiddlewaretoken': csrf},
+      datatype:"json",
+      success:function(json){
+          alert("更新完成");
+          location.reload();
+          }
+      })
+  });
+
   $("#submit_report").click(function(){
     if($("#basic-url").val()){    
       $(".loading").show();

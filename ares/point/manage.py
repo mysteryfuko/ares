@@ -117,4 +117,6 @@ def index(request):
   obj = forms.UploadFileForm()
   if not request.session.get('is_login', None):  # 不允许重复登录
     return redirect('/manage/login/')
-  return render(request, 'manage/index.html',{'obj':obj})
+  with open('setting.json','r')as fp:
+    set_json_data = json.load(fp)
+  return render(request, 'manage/index.html',{'obj':obj,"set_json_data":set_json_data})
