@@ -2,6 +2,7 @@ from django.shortcuts import render,HttpResponse
 from . import models
 import json,time,zipfile
 from django.db.models import F,Q
+from .report import DoReport
 
 def index(request,act):
   if act == "getsmall":
@@ -41,7 +42,7 @@ def index(request,act):
   if act == "setpoint":
     data = request.POST['data']
     try:
-      fo = open("setting.json", "w")
+      fo = open("setting.json", "w",encoding='utf-8')
       fo.write(data)
       fo.close()
     except BaseException:
@@ -49,6 +50,31 @@ def index(request,act):
     return HttpResponse("done")
 
 def ajax(request,action):
+
+  if action == "do_status_report":
+    url = request.POST['url']
+    s = models.status.objects.get(fight_id=url)
+    a = []
+    a.append(s.loadingNum)
+    a.append(s.loading)
+    return HttpResponse(json.dumps(a))
+
+  if action =="do_report":
+    url = request.POST['url']
+    jihe = json.loads(request.POST['jihe'])
+    jiesan = json.loads(request.POST['jiesan'])
+    try:
+      models.status.objects.get(fight_id=url)
+      return HttpResponse("ERROR_DONE")
+    except:
+      p = DoReport(jihe,jiesan)
+      PlayerList = p.get_fight_data(url)
+      if PlayerList == "ERROR":
+        return HttpResponse("ERROR")
+      else:
+        p.BackupData()
+        p.WriteData(PlayerList)
+    return HttpResponse("SUCCESS")
   #EPGP衰减
   if action =="do_epgp":
     #备份

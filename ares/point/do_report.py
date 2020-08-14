@@ -1,8 +1,7 @@
 import requests
 import sqlite3
-from retrying import retry
 import time
-from .models import score,record,xiaohao
+from . import models
 import zipfile
 from django.db.models import F,Q
 import json
@@ -11,10 +10,12 @@ import json
 api_key = "b917de504b076479bf04a6b648be6009"
 with open('setting.json','r')as fp:
   set_json_data = json.load(fp)
+for i in set_json_data:
+  if i['name'] == "集合分":
+    pass
+  elif i['name'] == "解散分":
+    pass
 
-where_to_do = ""
-num = 0
-list_num = 1
 session = requests.Session()
 
 def get_data(url):
@@ -22,12 +23,12 @@ def get_data(url):
   return return_data.json()
 
 def get_dahao(name):
-  user_log = xiaohao.objects.filter(xiaohao=name)
-  if user_log:
-    user_log = xiaohao.objects.get(xiaohao=name)
-    return user_log.dahao
-  else:
+  try:
+    xiaohao_list = models.xiaohao.objects.get(xiaohao=name)
+    return xiaohao_list.dahao
+  except:
     return name
+    
 
 """ Send a request to wcl
 :param fight_id: the special id for WCL

@@ -49,3 +49,8 @@ class user(models.Model):
 class xiaohao(models.Model):
   dahao = models.CharField(max_length=20)
   xiaohao = models.CharField(max_length=20)
+
+class status(models.Model):
+  loading = models.TextField()
+  loadingNum = models.FloatField(max_length=5)
+  fight_id = models.CharField(max_length=40)

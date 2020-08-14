@@ -1,12 +1,15 @@
 function report_ajax(){
   $.post("/ajax/do_report/",
     {
-      url:$("#basic-url").val(),'csrfmiddlewaretoken': csrf
+      url:$("#basic-url").val(),'csrfmiddlewaretoken': csrf,jihe: JSON.stringify(jihe),jiesan: JSON.stringify(jiesan)
     },function(data,status){
       if(data == "ERROR"){
         alert("输入错误");
         clearInterval(interval);
         }
+      else if(data == "ERROR_DONE"){
+        alert("正在分析，请勿重复提交");
+      }
       else{
         alert("分析完成");
         clearInterval(interval);
@@ -19,14 +22,11 @@ var do_status
 function report_status_ajax(){
   $.post("/ajax/do_status_report/",
     {
-      'csrfmiddlewaretoken': csrf
+      'csrfmiddlewaretoken': csrf,url:$("#basic-url").val()
     },function(data,status){
       var array = eval(data)
-      $(".progress-bar").attr("style","width:"+ array[0] +"%")
-      if (array[1] != do_status){
-        do_status = array[1]
-        $("#load_report").append("</br>"+array[1]);
-      }
+      $(".progress-bar").attr("style","width:"+ array[0]*100 +"%")
+      $("#load_report").html(array[1]);
     }
     );
 }
@@ -114,7 +114,8 @@ function get_name(e,a,url){
       })
   })
 }
-
+var jihe
+var jiesan
 $(document).ready(function(){
   csrf = $('input[name="csrfmiddlewaretoken"]').val();
   get_load();
@@ -141,13 +142,27 @@ $(document).ready(function(){
   });
 
   $("#submit_report").click(function(){
-    if($("#basic-url").val()){    
+    if($("#basic-url").val()){   
+      jihe = [];
+      jiesan = [] ;
       $(".loading").show();
       $(".progress").show();
       interval = setInterval(report_status_ajax, 3000);
+      $("#jihe input").each(function(){
+        if($(this).is(":checked")){
+          jihe.push('1')
+        }else{jihe.push('0')}
+      });
+      $("#jiesan input").each(function(){
+        if($(this).is(":checked")){
+          jiesan.push('1')
+        }else{jiesan.push('0')}
+      });
       report_ajax()
     }else{
       alert("请输入wcl地址")
+      $(".loading").hide();
+      $(".progress").hide();
     }
   });
 
