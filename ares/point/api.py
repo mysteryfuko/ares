@@ -5,6 +5,34 @@ from django.db.models import F,Q
 from .report import DoReport
 
 def index(request,act):
+  if act == "SaveAdd":
+    data = json.loads(request.POST['data'])
+    name_list = json.loads(request.POST['name_list'])
+    old_list = models.DKPadd.objects.get(id=data['id'])
+    for i in old_list.Player.split(','):
+      if i :
+        models.playerDKP.objects.filter(name=i,belong=old_list.belong).update(dkp=F('dkp')-int(old_list.dkp)) #先减分
+    temp_name = ""
+    for i in name_list:
+      models.playerDKP.objects.filter(name=i,belong=data['belong']).update(dkp=F('dkp')+int(data['dkp'])) #再加分
+      temp_name = temp_name + i +","
+      
+    models.DKPadd.objects.filter(id=data['id']).update(dkp=int(data['dkp']),belong=int(data['belong']),Player=temp_name,boss=data['boss'])
+    return HttpResponse("ok")
+
+  if act == "getaddlist":
+    belong = request.POST['belong']
+    list_logs = models.DKPadd.objects.filter(belong=belong).all()[:20]
+    json_list = []
+    for i in list_logs:
+      json_dict = {}
+      json_dict["id"] = i.id
+      json_dict["boss"] = i.boss
+      json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
+      json_dict["player"] = len(i.Player.split(','))-1
+      json_list.append(json_dict)
+    return HttpResponse(json.dumps(json_list))
+
   if act == "getsmall":
     small_logs = models.xiaohao.objects.all().order_by('dahao')
     json_list = []

@@ -8,13 +8,7 @@
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <title>Ares分数系统 后台</title>
     <!-- Bootstrap -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
-    
     <script src="https://libs.cdnjs.net/jquery/3.5.1/jquery.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.0/js/dataTables.buttons.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/rowgroup/1.1.1/js/dataTables.rowGroup.min.js"></script>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
     <script src="{% static 'js/manage.js' %}"></script>
@@ -114,6 +108,40 @@
 
       <div class="tab-pane fade" id="epgp">
         <button class="btn btn-primary" id="submit_epgp" style="margin-left:100px;margin-top:40px">衰减EPGP</button>
+      </div>
+
+      <div class="tab-pane fade" id="dkp">
+      
+      选择要编辑的列表：<select id="DkpTableList">
+        <option value="1">BWL</option>
+        <option value="2">TAQ</option>
+      </select>
+      <button class="btn btn-primary" id="New_Add" style="margin-left:50px">新建奖惩</button><br>
+        <div id="DkpTab" style="margin-top:20px">
+          <table class="table table-bordered table-hover" id="DkpTable" style="width:100%">
+            <thead>
+              <tr>
+                  <th>时间</th>
+                  <th>BOSS</th>
+                  <th>参与人数</th>
+                  <th>编辑</th>
+                  <th>删除</th>
+              </tr>
+            </thead>  
+            <tbody id="dkplist">
+            </tbody>              
+            <tfoot>
+              <tr>
+                  <th>时间</th>
+                  <th>BOSS</th>
+                  <th>参与人数</th>
+                  <th>编辑</th>
+                  <th>删除</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
       </div>
 
 

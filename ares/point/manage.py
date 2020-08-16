@@ -112,6 +112,40 @@ def do_loot(request):
   
   return HttpResponse('OK')
   
+def edit(request,act):
+  try:
+    Name_id = request.GET['id']  
+    if act =="add":
+      a = models.DKPadd.objects.get(id=Name_id)
+      Name_List = models.playerDKP.objects.filter(belong=a.belong).values("name").order_by("job")
+      a.Player = a.Player.split(',')
+      Dkp_list = models.DKPtable.objects.all()
+      return render(request,'manage/edite.html',{'dkp':a,'list':Name_List,'Dkp_list':Dkp_list})
+    if act =="loot":
+      a = models.DKPLoot.objects.get(id=Name_id)  
+      return HttpResponse(a)
+  except:
+    if act =="add":
+      try:
+        belong = request.GET['belong']
+      except:
+        belong = 1  
+      a = models.DKPadd.objects.get(id=1)
+      a.id =""
+      a.time = str(time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()))
+      a.boss = ""
+      a.belong = int(belong)
+      a.dkp = ""
+      a.Player = ""
+      Dkp_list = models.DKPtable.objects.all()
+      Name_List = models.playerDKP.objects.filter(belong=belong).values("name").order_by("job")
+      a.Player = a.Player.split(',')
+      return render(request,'manage/edite.html',{'dkp':a,'list':Name_List,'Dkp_list':Dkp_list})
+
+
+  
+
+  
 
 def index(request):
   obj = forms.UploadFileForm()

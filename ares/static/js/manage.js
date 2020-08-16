@@ -72,11 +72,24 @@ function get_load(){
         }
       }});
     }
+    if(activeTab =="#dkp"){
+      get_list()
+    }
 
 
   });
 } 
-
+function get_list(){
+  $.ajax({
+    type:"post",data:{'belong':$('#DkpTableList option:selected').val(),'csrfmiddlewaretoken': csrf},url:"/api/getaddlist/",success:function(data){
+      $("#dkplist").empty();
+        var obj_json = JSON.parse(data);
+        for(var i in obj_json){
+          $("#dkplist").append("<tr><td>"+obj_json[i].time+"</td><td>"+obj_json[i].boss+"</td><td>"+obj_json[i].player+"</td><td><a href=\"/manage/edit/add/?id="+obj_json[i].id +"\">编辑</a></td><td>"+obj_json[i].xiaohao+"</td></tr>")
+        }
+      }
+    });
+}
 function get_name(e,a,url){
 //e=>inputbox
 //a => selecet box
@@ -117,6 +130,15 @@ function get_name(e,a,url){
 var jihe
 var jiesan
 $(document).ready(function(){
+
+  $("#DkpTableList").click(function(){
+    get_list()
+  });
+
+  $("#New_Add").click(function(){
+    $(location).attr('href','/manage/edit/add/?belong='+$('#DkpTableList option:selected').val());
+  });
+
   csrf = $('input[name="csrfmiddlewaretoken"]').val();
   get_load();
 
@@ -151,7 +173,7 @@ $(document).ready(function(){
       $("#jihe input").each(function(){
         if($(this).is(":checked")){
           jihe.push('1')
-        }else{jihe.push('0')}
+        }else{jihe.push('0')}        
       });
       $("#jiesan input").each(function(){
         if($(this).is(":checked")){

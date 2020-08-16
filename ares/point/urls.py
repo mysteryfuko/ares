@@ -6,6 +6,7 @@ from django.conf import settings
 manage_patterns = [
     re_path(r'^$|index', manage.index, name='index'),
     path('login/', manage.login),
+    path('edit/<str:act>/',manage.edit),
 ] 
 
 urlpatterns = [
