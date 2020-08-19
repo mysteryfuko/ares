@@ -43,7 +43,7 @@ def index(request,act):
 
   if act == "getaddlist":
     belong = request.POST['belong']
-    list_logs = models.DKPadd.objects.filter(belong=belong).all()[:20]
+    list_logs = models.DKPadd.objects.filter(belong=belong).order_by('-id').all()[:20]
     json_list = []
     for i in list_logs:
       json_dict = {}
