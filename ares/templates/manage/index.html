@@ -146,14 +146,36 @@
 
 
       <div class="tab-pane fade" id="loot">
-      </br></br></br>
+      </br>
+      <div class="form-inline row" style="padding:20px">
+        姓名：<input type="text" class="form-control" id="new-add-name" aria-describedby="basic-addon3" style="width:200px;display:inline-block;">
+        物品：<input type="text" class="form-control" id="new-add-item" aria-describedby="basic-addon3" style="width:200px;display:inline-block;">
+        <input id="add-item" type="hidden"></br>
+        <select id="suggest_loot_ul" size="3" class="SelectList" >         
+        </select>
+        <select id="suggest_item_ul" size="10" class="SelectList" style="position:absolute;margin-top:180px;margin-left:350px">         
+        </select>
+        <div style="position:relative;margin-top:200px;">
+        所属DKP列表：<select id="DkpAddTableList">
+          <option value="">==请选择==</option>
+          <option value="1">BWL</option>
+          <option value="2">TAQ</option>
+        </select>
+        分值：<input type="text" class="form-control" id="new-add-dkp" aria-describedby="basic-addon3" style="position:absolute;width:200px;display:inline-block;">
+        <button class="btn btn-primary" id="submit_add_loot">确认添加</button>
+        </div>
+      </div>
+
+      </br></br>
+      <div style="margin-top:150px">
       <a href="/static/loot_templates.xls">下载loot模板</a></br></br></br>
 
         <form action="/do_loot/" method="post" enctype="multipart/form-data" >{% csrf_token %}
        {{ obj.file }}
         <input type="submit" value="上传">
         </form>        
-      </div>
+        </div>
+       </div>
 
 
       <div class="tab-pane fade" id="down">

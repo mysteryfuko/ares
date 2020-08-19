@@ -47,66 +47,42 @@ def do_loot(request):
     obj = forms.UploadFileForm(request.POST, request.FILES)  # 必须填 request.POST
 
     if obj.is_valid():
-        new_loot_file = "./backup/loot/"+ str(time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())) + ".xls"
-        with open(new_loot_file, 'wb') as f:
-          for line in obj.cleaned_data['file'].chunks():
-            f.write(line)
-        f.close()
-        #备份
-        new_name = "./backup/loot" + str(time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())) + ".zip"
-        zp=zipfile.ZipFile(new_name,'w', zipfile.ZIP_DEFLATED)
-        zp.write("db.sqlite3")
-        zp.close()
+      new_loot_file = "./backup/loot/"+ str(time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())) + ".xls"
+      with open(new_loot_file, 'wb') as f:
+        for line in obj.cleaned_data['file'].chunks():
+          f.write(line)
+      f.close()
+      #备份
+      new_name = "./backup/loot" + str(time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())) + ".zip"
+      zp=zipfile.ZipFile(new_name,'w', zipfile.ZIP_DEFLATED)
+      zp.write("db.sqlite3")
+      zp.close()
 
-        wb = xlrd.open_workbook(new_loot_file)#打开文件
-
-        #read epgp loot
-        sheet1 = wb.sheet_by_index(0)
-        list_item_data = sheet1.col_values(0)
-        list_gp_data = sheet1.col_values(1)
-        list_name_data = sheet1.col_values(2)
-        if list_gp_data[0].upper() == "GP":
-          loot_data = []
-          for i,j,k in zip(list_item_data,list_gp_data,list_name_data):
-            if i != "物品":
-              url = "https://60.wowfan.net/?search={}&opensearch".format(i)
-              response  = requests.get(url).json()
-              print(response)
-              temp = {'item':response[7][0][1],'name':k,'gp':j}
-              loot_data.append(temp)
-          # 2020-06-17 21:32:32
-          for i in loot_data:
-            if score.objects.filter(name=i['name']):
-              record.objects.create(item=i['item'],gp=i['gp'],name=i['name'],time=str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))
-              score.objects.filter(name=i['name']).update(gp=F('gp')+int(i['gp']))
-            else:
-              return HttpResponse(i['name']+"名字输入不正确 请检查")
-
-        #read dkp loot 1
-        sheet2 = wb.sheet_by_index(1)
-        list_item_data1 = sheet2.col_values(0)
-        list_dkp_data = sheet2.col_values(1)
-        list_name_data1 = sheet2.col_values(2)
+      wb = xlrd.open_workbook(new_loot_file)#打开文件
+      for n in wb.sheet_names():
+        belong = models.DKPtable.objects.get(name=n).id
+        sheet_list = wb.sheet_by_name(n)
+        list_item_data = sheet_list.col_values(0)
+        list_dkp_data = sheet_list.col_values(1)
+        list_name_data = sheet_list.col_values(2)
         if list_dkp_data[0].upper() == "DKP":
-          loot_data1 = []
-          for i,j,k in zip(list_item_data1,list_dkp_data,list_name_data1):
+          loot_data = []
+          for i,j,k in zip(list_item_data,list_dkp_data,list_name_data):
             if i != "物品":
-              url = "https://60.wowfan.net/?search={}&opensearch".format(i)
-              response  = requests.get(url).json()
-              print(response)
-              temp = {'item':response[7][0][1],'name':k,'dkp':j}
-              loot_data1.append(temp)
-          # 2020-06-17 21:32:32
-          for i in loot_data1:
-            if score.objects.filter(name=i['name']):
-              record.objects.create(item=i['item'],dkp=i['dkp'], name=i['name'], time=str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))
-              score.objects.filter(name=i['name']).update(dkp=F('dkp')-int(i['dkp']))
+              try:
+                url = "https://60.wowfan.net/?search={}&opensearch".format(i)
+                response  = requests.get(url).json()
+                print(response)
+                temp = {'item':response[7][0][1],'name':k,'dkp':j}
+                loot_data.append(temp)
+              except:
+                return HttpResponse(i+"物品输入不正确 请检查")
+          for i in loot_data:
+            if models.playerDKP.objects.filter(name=i['name']):
+              models.DKPLoot.objects.create(item=i['item'],belong=belong,dkp=i['dkp'],Player=i['name'], time=str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))
+              models.playerDKP.objects.filter(name=i['name'],belong=belong).update(dkp=F('dkp')-int(i['dkp']))
             else:
-              return HttpResponse(i['name']+"名字输入不正确 请检查")
-
-
-
-
+              return HttpResponse(i['name']+"名字输入不正确 请检查")         
     else:
       print(obj.errors)
   

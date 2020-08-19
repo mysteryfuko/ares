@@ -1,23 +1,44 @@
 from django.shortcuts import render,HttpResponse
 from . import models
-import json,time,zipfile
+import json,time,zipfile,requests
 from django.db.models import F,Q
 from .report import DoReport
 
 def index(request,act):
+
+  if act =="getitem":
+    item = request.POST['item']
+    url = "https://60.wowfan.net/?search={}&opensearch".format(item)
+    response  = requests.get(url).json()
+    json_list = []
+
+    for index in range(len(response[1])):
+      temp = {'name':response[1][index],'item':response[7][index][1]}
+      print(temp)
+      json_list.append(temp)
+    return HttpResponse(json.dumps(json_list))
+
+
   if act == "SaveAdd":
     data = json.loads(request.POST['data'])
     name_list = json.loads(request.POST['name_list'])
-    old_list = models.DKPadd.objects.get(id=data['id'])
-    for i in old_list.Player.split(','):
-      if i :
-        models.playerDKP.objects.filter(name=i,belong=old_list.belong).update(dkp=F('dkp')-int(old_list.dkp)) #先减分
-    temp_name = ""
-    for i in name_list:
-      models.playerDKP.objects.filter(name=i,belong=data['belong']).update(dkp=F('dkp')+int(data['dkp'])) #再加分
-      temp_name = temp_name + i +","
-      
-    models.DKPadd.objects.filter(id=data['id']).update(dkp=int(data['dkp']),belong=int(data['belong']),Player=temp_name,boss=data['boss'])
+    if data['id']:
+      old_list = models.DKPadd.objects.get(id=data['id'])
+      for i in old_list.Player.split(','):
+        if i :
+          models.playerDKP.objects.filter(name=i,belong=old_list.belong).update(dkp=F('dkp')-int(old_list.dkp)) #先减分
+      temp_name = ""
+      for i in name_list:
+        models.playerDKP.objects.filter(name=i,belong=data['belong']).update(dkp=F('dkp')+int(data['dkp'])) #再加分
+        temp_name = temp_name + i +","
+        
+      models.DKPadd.objects.filter(id=data['id']).update(dkp=int(data['dkp']),belong=int(data['belong']),Player=temp_name,boss=data['boss'])
+    else:
+      temp_name=""
+      for i in name_list:
+        models.playerDKP.objects.filter(name=i,belong=data['belong']).update(dkp=F('dkp')+int(data['dkp'])) #再加分
+        temp_name = temp_name + i +","
+      models.DKPadd.objects.create(dkp=int(data['dkp']),belong=int(data['belong']),time=str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())),Player=temp_name,boss=data['boss'])
     return HttpResponse("ok")
 
   if act == "getaddlist":
@@ -64,6 +85,20 @@ def index(request,act):
       models.playerDKP.objects.get(name=dahao)
       models.xiaohao.objects.create(dahao=dahao,xiaohao=xiaohao)
     except BaseException:
+      return HttpResponse("error")
+    return HttpResponse("done")
+
+  if act == "SubmitLoot":
+    user = request.POST['user']
+    item = request.POST['item']
+    dkp = request.POST['dkp']
+    belong = request.POST['belong']
+    try:
+      a=models.playerDKP.objects.get(name=user,belong=belong)
+      print(a)
+      models.DKPLoot.objects.create(Player=user,item=item,time=str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())),dkp=dkp,belong=belong)
+      models.playerDKP.objects.filter(name=user,belong=belong).update(dkp=F('dkp')-int(dkp)) #再加分
+    except:
       return HttpResponse("error")
     return HttpResponse("done")
 
@@ -200,7 +235,7 @@ def ajax(request,action):
       json_dict["dkp"] = i.dkp
       json_dict["name"] = i.Player
       try:
-        json_dict["class"] = models.playerEPGP.objects.get(name=i.Player).job
+        json_dict["class"] = models.playerDKP.objects.get(name=i.Player,belong=belong).job
       except BaseException:
         json_dict["class"] = "WARRIOR"
       json_list.append(json_dict)

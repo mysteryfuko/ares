@@ -75,7 +75,44 @@ function get_load(){
     if(activeTab =="#dkp"){
       get_list()
     }
-
+    if(activeTab == "#loot"){
+      get_name("#new-add-name","#suggest_loot_ul","/api/getuser/");
+      $("#new-add-item").keyup(function(){
+        //如果文本框为空，不发送请求
+        if($("#new-add-item").val().length < 2){
+          $("#suggest_item_ul").hide();
+            return false;
+        }        
+        var item = $("#new-add-item").val()
+        $.ajax({
+          type:"post",
+          url :"/api/getitem/",
+          data: {"item":item,'csrfmiddlewaretoken': csrf},
+          datatype:"json",
+          success:function(json){
+            if(json){
+              var html_data = ""
+              data = JSON.parse(json)
+              if(data.length > 0){
+                $("#suggest_item_ul").show();
+                for(i in data){
+                  html_data += "<option value =\""+data[i].item+"\">"+data[i].name+"</option>";
+                }
+                $("#suggest_item_ul").html(html_data);
+                $("option").click(function(){//单击选项列表将单击的值放入搜索框
+                  $("#new-add-item").val($(this).text()); 
+                  $("#add-item").val($(this).val());             
+                  $("#suggest_item_ul").hide();//放入之后隐藏
+                });
+              }else{
+                $("#suggest_item_ul").hide();
+              }           
+            }
+              
+          }
+          })
+      });
+    }
 
   });
 } 
@@ -133,6 +170,35 @@ $(document).ready(function(){
 
   $("#DkpTableList").click(function(){
     get_list()
+  });
+
+  $("#submit_add_loot").click(function(){
+    if(($("#add-item").val() !="") && ($('#DkpAddTableList option:selected').val()!="") && ($('#new-add-dkp').val()!="")){
+      $.ajax({
+        type:"post",
+        data:{
+          "user":$("#new-add-name").val(),
+          "item":$("#add-item").val(),
+          "dkp":$("#new-add-dkp").val(),
+          "belong":$('#DkpAddTableList option:selected').val(),
+          'csrfmiddlewaretoken': csrf
+        },
+        url:"/api/SubmitLoot/",
+        success:function(data){
+          if(data =="done"){
+            alert("添加Loot成功");
+            $("#new-add-name").val("");
+            $("#add-item").val("");
+            $("#new-add-item").val("");
+            $("#ew-add-dkp").val("");
+
+          }else if(data == "error"){
+            alert("请确认姓名输入是否正确")
+          }
+      }});
+    }else{
+      alert("请确认输入是否正确")
+    }
   });
 
   $("#New_Add").click(function(){

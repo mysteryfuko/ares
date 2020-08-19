@@ -19,7 +19,7 @@ ID：<input value="{{dkp.id}}" disabled='disabled'></br>
 时间：<input value="{{dkp.time}}" disabled='disabled'></br>
 时间名称：<input id="boss" value="{{dkp.boss}}"></br>
 所属列表：
-<select disabled='disabled'>
+<select disabled='disabled' id="dkp_list">
 {% for i in Dkp_list %}
 <option value="{{i.id}}" {% if i.id == dkp.belong%}selected{% endif %}>{{i.name}}</option>
 {% endfor %}
@@ -48,7 +48,7 @@ $(document).ready(function () {
     data['id']="{{dkp.id}}";
     data['time']="{{dkp.time}}";
     data['boss']=$("#boss").val();
-    data['belong']=$("#belong").val();
+    data['belong']=$('#dkp_list option:selected').val();
     data['dkp']=$("#dkp").val();
     $.ajax({
       type:"post",
