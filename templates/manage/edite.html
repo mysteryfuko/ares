@@ -17,6 +17,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
     </head>
 <body>
+<div style="margin-top:50px;margin-left:250px">
 ID：<input value="{{dkp.id}}" disabled='disabled'></br>
 时间：<input value="{{dkp.time}}" disabled='disabled'></br>
 时间名称：<input id="boss" value="{{dkp.boss}}"></br>
@@ -28,7 +29,7 @@ ID：<input value="{{dkp.id}}" disabled='disabled'></br>
 
 </select></br>
 分值：<input id="dkp" value="{{dkp.dkp}}"></br>
-<div id="name_list">
+<div id="name_list" style="width:60%">
 {% for i in list %}
 <div class="{{i.job}}" style="width:200px;float: left;"><input type="checkbox" value="{{i.name}}" style="width:15px;height:15px;"{% if i.name in dkp.Player%}checked{% endif %}>{{i.name}}</div>
 {% endfor %}
@@ -36,7 +37,7 @@ ID：<input value="{{dkp.id}}" disabled='disabled'></br>
 {% csrf_token %}
 </br>
 <div style="clear: both;float:none;text-align:center;padding-top:50px;"><input type="submit" id="submit" style="center"></div>
-
+</div>
 <script>
 $(document).ready(function () {
   $("#submit").click(function(){
