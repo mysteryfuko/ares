@@ -14,10 +14,11 @@ def down_dkp(request):
   table_num = models.DKPtable.objects.all()   
   json_dict = "WebDKP_DkpTable = {\n"
   for i in nameList:
-    try:
-      job = models.playerDKP.objects.filter(name=i['name'],belong=1).get().job
-    except:
-      job = models.playerDKP.objects.filter(name=i['name'],belong=2).get().job
+    for j in table_num:
+      try:
+        job = models.playerDKP.objects.filter(name=i['name'],belong=j).get().job
+      except:
+        pass
     if job =="DRUID":
       job = "德鲁伊"
     elif job =="HUNTER":
