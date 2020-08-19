@@ -58,20 +58,30 @@ def PlayerDetail(request,name):
 def kill(request,act,bossid):
   point_dkp = 0
   point_ep = 0
+  NameList={}
   if act =="epgp":
     KillLog = models.epgp.objects.get(id=int(bossid))
     name = KillLog.name.split(',')
+    for i in name:
+      if i:
+        NameList[i] = models.playerEPGP.objects.get(name=i).job
+        NameList.update(NameList)
     point_ep = KillLog.ep
   elif act =="dkp":
     KillLog = models.DKPadd.objects.get(id=int(bossid))
     name = KillLog.Player.split(',')
+    for i in name:
+      if i:
+        NameList[i] = models.playerDKP.objects.get(name=i,belong=KillLog.belong).job
+        NameList.update(NameList)
     point_dkp = KillLog.dkp
+  sorted_list = sorted(NameList.items(),key=lambda x : x[1],reverse=True)
   renderData = {
     "id":bossid,
     "time":KillLog.time,
     "boss":KillLog.boss,
     "ep":point_ep,
     "dkp":point_dkp,
-    "name":name
+    "name":sorted_list
   }
   return render(request,'kill.html',renderData)

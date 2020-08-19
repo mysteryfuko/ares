@@ -113,8 +113,8 @@
         {% endif %}
         </th>
         <th>
-        {% for i in name %}
-        <a href="/PlayerDetail/{{i}}">{{i}}</a>&nbsp;&nbsp;
+        {% for  i in name %}
+        <div class="{{i.1}}" style="width:100px;float: left;" ><a href="/PlayerDetail/{{i.0}}" style="color:#000000;font-weight: normal">{{i.0}}</a></div>
         {% endfor %}
         </th>
       </tr>
