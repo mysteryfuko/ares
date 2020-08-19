@@ -14,6 +14,7 @@ def down_dkp(request):
   table_num = models.DKPtable.objects.all()   
   json_dict = "WebDKP_DkpTable = {\n"
   for i in nameList:
+    job="WARRIOR"
     for j in table_num:
       try:
         job = models.playerDKP.objects.filter(name=i['name'],belong=j).get().job
@@ -46,7 +47,10 @@ def down_dkp(request):
         json_dict =json_dict + '\n\t["dkp"]=' + str(dkp) + ',\n'
       json_dict += '\t["dkp_' + str(j.id) + '"]=' + str(dkp) + ',\n\t["dkp_lifetime_' + str(j.id) + '"]=' + str(dkp) + ',\n'
     json_dict += '},\n'
-  json_dict = json_dict + '}\nWebDKP_Tables = {\n["BWL"] = {\n		["id"] = 1, \n},\n["TAQ"] = {\n		["id"] = 2, \n},\n}\n\nWebDKP_Loot = {\n}\n\nWebDKP_Alts = {\n}\n\nWebDKP_WebOptions = {\n["ZeroSumEnabled"] = 0,\n\n["CombineAlts"] = 1,\n["TiersEnabled"] = 1,\n["TierSize"] = 50,\n["LifetimeEnabled"] = 1,\n["User"] = "mysteryfuko",\n["AddonVersion"] = 3,\n["WowCatSign"] = "04f91db9576bc71b04a06a3db5e9e4a4",\n}'
+  json_dict = json_dict + '}\nWebDKP_Tables = {\n'
+  for i in table_num:
+    json_dict = json_dict + '["' + i.name + '"] = {\n		["id"] = ' + str(i.id) +', \n},\n'
+  json_dict = json_dict + '\n}\n\nWebDKP_Loot = {\n}\n\nWebDKP_Alts = {\n}\n\nWebDKP_WebOptions = {\n["ZeroSumEnabled"] = 0,\n\n["CombineAlts"] = 1,\n["TiersEnabled"] = 1,\n["TierSize"] = 50,\n["LifetimeEnabled"] = 1,\n["User"] = "mysteryfuko",\n["AddonVersion"] = 3,\n["WowCatSign"] = "04f91db9576bc71b04a06a3db5e9e4a4",\n}'
   response = FileResponse(json_dict)
   response['content_type'] = "application/octet-stream"
   response['Content-Disposition'] = 'attachment; filename=WebDKP.lua'
