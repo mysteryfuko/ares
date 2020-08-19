@@ -271,7 +271,10 @@ def ajax(request,action):
       json_dict["name"] = name
       json_dict["activeID"] = i.id      
       json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
-      json_dict["dkp"] = i.dkp
+      if i.dkp > 0:
+        json_dict["dkp"] = "+"+str(i.dkp)
+      else:
+        json_dict["dkp"] = i.dkp
       json_dict["active"] = i.boss 
       json_list.append(json_dict)
     for i in loot_logs:
