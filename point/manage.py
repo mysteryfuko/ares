@@ -93,7 +93,7 @@ def edit(request,act):
     Name_id = request.GET['id']  
     if act =="add":
       a = models.DKPadd.objects.get(id=Name_id)
-      Name_List = models.playerDKP.objects.filter(belong=a.belong).values("name").order_by("job")
+      Name_List = models.playerDKP.objects.filter(belong=a.belong).values("name","job").order_by("job")
       a.Player = a.Player.split(',')
       Dkp_list = models.DKPtable.objects.all()
       return render(request,'manage/edite.html',{'dkp':a,'list':Name_List,'Dkp_list':Dkp_list})
@@ -114,7 +114,7 @@ def edit(request,act):
       a.dkp = ""
       a.Player = ""
       Dkp_list = models.DKPtable.objects.all()
-      Name_List = models.playerDKP.objects.filter(belong=belong).values("name").order_by("job")
+      Name_List = models.playerDKP.objects.filter(belong=belong).values("name","job").order_by("job")
       a.Player = a.Player.split(',')
       return render(request,'manage/edite.html',{'dkp':a,'list':Name_List,'Dkp_list':Dkp_list})
 
