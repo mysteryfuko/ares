@@ -278,7 +278,7 @@ def ajax(request,action):
       json_dict = {}
       json_dict["name"] = name   
       json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
-      json_dict["dkp"] = i.dkp
+      json_dict["dkp"] = "-"+str(i.dkp)
       json_dict["item"] = i.item 
       json_list.append(json_dict)
     data ={"data":json_list}
