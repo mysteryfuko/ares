@@ -54,6 +54,39 @@ def index(request,act):
       json_list.append(json_dict)
     return HttpResponse(json.dumps(json_list))
 
+  if act == "delXiaohao":
+    id = request.POST['id']
+    models.xiaohao.objects.filter(id=id).delete()
+    return HttpResponse("ok")
+
+  if act == "SubmitUser":
+    name = request.POST['name']
+    belong = request.POST['belong']
+    job = request.POST['job']
+    try:
+      models.playerDKP.objects.filter(name=name,belong=belong).get()
+      return HttpResponse("error")
+    except:
+      models.playerDKP.objects.create(dkp=0,name=name,job = job,belong=belong)
+      return HttpResponse("ok")
+
+  if act == "delUser":
+    id = request.POST['id']
+    models.playerDKP.objects.filter(id=id).delete()
+    return HttpResponse("ok")
+
+  if act == "getnamelist":
+    belong = request.POST['belong']
+    list_logs = models.playerDKP.objects.filter(belong=belong).order_by('job').all()
+    json_list = []
+    for i in list_logs:
+      json_dict = {}
+      json_dict["id"] = i.id
+      json_dict["name"] = i.name
+      json_dict["job"] = i.job
+      json_list.append(json_dict)
+    return HttpResponse(json.dumps(json_list))
+
   if act == "getsmall":
     small_logs = models.xiaohao.objects.all().order_by('dahao')
     json_list = []
@@ -61,10 +94,13 @@ def index(request,act):
       json_dict = {}
       json_dict["xiaohao"] = i.xiaohao
       json_dict["dahao"] = i.dahao
-      try:
-        json_dict["class"] = models.playerDKP.objects.get(name=i.dahao).job
-      except BaseException:
-        json_dict["class"] = "WARRIOR"
+      json_dict["id"] = i.id
+      json_dict["class"] = "WARRIOR"
+      for j in models.DKPtable.objects.all():
+        try:
+          json_dict["class"] = models.playerDKP.objects.get(name=i.dahao,belong=j.id).job
+        except:
+          pass
       json_list.append(json_dict)
     return HttpResponse(json.dumps(json_list))
 

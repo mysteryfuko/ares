@@ -89,6 +89,8 @@ def do_loot(request):
   return HttpResponse('OK')
   
 def edit(request,act):
+  if not request.session.get('is_login', None):  # 不允许重复登录
+    return redirect('/manage/login/')
   try:
     Name_id = request.GET['id']  
     if act =="add":
