@@ -74,7 +74,10 @@ def kill(request,act,bossid):
     name = KillLog.Player.split(',')
     for i in name:
       if i:
-        NameList[i] = models.playerDKP.objects.get(name=i,belong=KillLog.belong).job
+        try:
+          NameList[i] = models.playerDKP.objects.get(name=i,belong=KillLog.belong).job
+        except:
+          NameList[i] = "WARRIOR"
         NameList.update(NameList)
     point_dkp = KillLog.dkp
   sorted_list = sorted(NameList.items(),key=lambda x : x[1],reverse=True)

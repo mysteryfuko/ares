@@ -1,6 +1,6 @@
 from django.shortcuts import render,HttpResponse
 from . import models
-import json,time,zipfile,requests
+import json,time,zipfile,requests,re
 from django.db.models import F,Q
 from .report import DoReport
 
@@ -249,7 +249,7 @@ def ajax(request,action):
 
   if action == "dkp":
     belong = request.GET['belong']
-    dkp_score = models.playerDKP.objects.filter(belong=belong).all()
+    dkp_score = models.playerDKP.objects.filter(belong=belong).all().order_by('-dkp')
     json_list = []
     for i in dkp_score:
       json_dict = {}
@@ -278,6 +278,30 @@ def ajax(request,action):
     data ={"data":json_list}
     return HttpResponse(json.dumps(data))
 
+  if action == "WXdkploot":
+    belong = request.GET['belong']
+    dkp_loot = models.DKPLoot.objects.filter(belong=belong).all().order_by('-time')[:50]
+    json_list = []
+    session = requests.Session()
+    for i in dkp_loot:
+      json_dict = {}
+      url = "https://60.wowfan.net/?item={}&domain=cn&power".format(i.item)
+      response  = session.get(url).text
+      temp_name = re.search('name_zhcn: \'[\u4e00-\u9fa5]*',response).group()
+      temp_icon = re.search('icon: \'[A-Za-z0-9-\_]*',response).group()
+      json_dict["item"] = temp_name.replace("name_zhcn: '","")
+      json_dict["pic"] = "https://cdn.jsdelivr.net/gh/wowfanet/w/wdb/images/wow/icons/large/{}.jpg".format(temp_icon.replace("icon: '",""))
+      json_dict["time"] = i.time.strftime("%Y-%m-%d")
+      json_dict["dkp"] = i.dkp
+      json_dict["name"] = i.Player
+      try:
+        json_dict["class"] = models.playerDKP.objects.get(name=i.Player,belong=belong).job
+      except BaseException:
+        json_dict["class"] = "WARRIOR"
+      json_list.append(json_dict)
+    data ={"data":json_list}
+    return HttpResponse(json.dumps(data))
+
   if action =="dkpadd":
     belong = request.GET['belong']
     dkp_add = models.DKPadd.objects.filter(belong=belong).all()
@@ -296,6 +320,80 @@ def ajax(request,action):
     data ={"data":json_list}
     return HttpResponse(json.dumps(data))
 
+  if action == "WXBossLog":
+    BossID = request.GET['boss']
+    point_dkp = 0
+    NameList={}
+    KillLog = models.DKPadd.objects.get(id=int(BossID))
+    name = KillLog.Player.split(',')
+    for i in name:
+      if i:
+        try:
+          NameList[i] = models.playerDKP.objects.get(name=i,belong=KillLog.belong).job
+        except:
+          NameList[i] = "WARRIOR"
+        NameList.update(NameList)
+    point_dkp = KillLog.dkp
+    sorted_list = sorted(NameList.items(),key=lambda x : x[1],reverse=True)
+    renderData = {
+      "id":BossID,
+      "time":KillLog.time.strftime("%Y-%m-%d"),
+      "boss":KillLog.boss,
+      "dkp":point_dkp,
+      "name":sorted_list
+    }
+    return HttpResponse(json.dumps(renderData))
+  if action =="WXdkpadd":
+    belong = request.GET['belong']
+    dkp_add = models.DKPadd.objects.filter(belong=belong).all().order_by('-time')
+    json_list = []
+    for i in dkp_add:
+      json_dict = {}
+      json_dict["id"] = i.id      
+      json_dict["boss"] = i.boss
+      json_dict["dkp"] = i.dkp
+      json_dict["time"] = i.time.strftime("%Y-%m-%d")
+      playerNum = len(i.Player.split(','))-1
+      if playerNum == 0:
+        playerNum = 1
+      json_dict["player"] = playerNum
+      json_list.append(json_dict)
+    data ={"data":json_list}
+    return HttpResponse(json.dumps(data))
+
+  if action =="WXPlayerdkplog":
+    belong = request.GET['belong']
+    name = request.GET['name']
+    loot_logs = models.DKPLoot.objects.filter(belong=belong,Player=name).all()
+    logs = models.DKPadd.objects.extra(where=['"point_DKPadd"."belong" ='+belong+' AND "point_DKPadd"."Player" LIKE "'+str(name)+',%%") OR ("point_DKPadd"."belong" ='+belong+' AND "point_DKPadd"."Player" = "' + str(name) +'") OR("point_DKPadd"."belong" ='+belong+' AND "point_DKPadd"."Player" LIKE "%%,'+str(name)+',%%"'])
+    json_list = []
+    for i in logs:
+      json_dict = {}
+      json_dict["name"] = name
+      json_dict["activeID"] = i.id      
+      json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
+      if i.dkp > 0:
+        json_dict["dkp"] = "+"+str(i.dkp)
+      else:
+        json_dict["dkp"] = i.dkp
+      json_dict["active"] = i.boss 
+      json_list.append(json_dict)
+    for i in loot_logs:
+      json_dict = {}
+      json_dict["name"] = name   
+      json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
+      json_dict["dkp"] = "-"+str(i.dkp)
+      url = "https://60.wowfan.net/?item={}&domain=cn&power".format(i.item)
+      response  = requests.get(url).text
+      temp_name = re.search('name_zhcn: \'[\u4e00-\u9fa5]*',response).group()
+      temp_icon = re.search('icon: \'[A-Za-z0-9-\_]*',response).group()
+      json_dict["active"] = temp_name.replace("name_zhcn: '","")
+      json_dict["pic"] = "https://cdn.jsdelivr.net/gh/wowfanet/w/wdb/images/wow/icons/large/{}.jpg".format(temp_icon.replace("icon: '",""))
+      json_list.append(json_dict)
+    json_list.sort(key = lambda x:x["time"],reverse = True)
+    data ={"data":json_list}
+    return HttpResponse(json.dumps(data))
+    
   if action =="Playerdkplog":
     belong = request.GET['belong']
     name = request.GET['name']
@@ -320,6 +418,7 @@ def ajax(request,action):
       json_dict["dkp"] = "-"+str(i.dkp)
       json_dict["item"] = i.item 
       json_list.append(json_dict)
+    json_list.sort(key = lambda x:x["time"],reverse = True)
     data ={"data":json_list}
     return HttpResponse(json.dumps(data))
 
