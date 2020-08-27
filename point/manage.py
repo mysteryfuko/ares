@@ -59,33 +59,35 @@ def do_loot(request):
       zp.close()
 
       wb = xlrd.open_workbook(new_loot_file)#打开文件
-      for n in wb.sheet_names():
+      loot_data =[]
+      for n in wb.sheet_names():        
         belong = models.DKPtable.objects.get(name=n).id
         sheet_list = wb.sheet_by_name(n)
         list_item_data = sheet_list.col_values(0)
         list_dkp_data = sheet_list.col_values(1)
         list_name_data = sheet_list.col_values(2)
         if list_dkp_data[0].upper() == "DKP":
-          loot_data = []
+          loot_data_temp = []
           for i,j,k in zip(list_item_data,list_dkp_data,list_name_data):
             if i != "物品":
               try:
                 url = "https://60.wowfan.net/?search={}&opensearch".format(i)
                 response  = requests.get(url).json()
-                print(response)
-                temp = {'item':response[7][0][1],'name':k,'dkp':j}
-                loot_data.append(temp)
+                temp = {'item':response[7][0][1],'name':k,'dkp':j,'belong':belong}
+                loot_data_temp.append(temp)
               except:
                 return HttpResponse(i+"物品输入不正确 请检查")
-          for i in loot_data:
-            if models.playerDKP.objects.filter(name=i['name']):
-              models.DKPLoot.objects.create(item=i['item'],belong=belong,dkp=i['dkp'],Player=i['name'], time=str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))
-              models.playerDKP.objects.filter(name=i['name'],belong=belong).update(dkp=F('dkp')-int(i['dkp']))
-            else:
-              return HttpResponse(i['name']+"名字输入不正确 请检查")         
+          for i in loot_data_temp:
+            try:
+              models.playerDKP.objects.filter(name=i['name'],belong=belong).get()
+            except:
+              return HttpResponse("---"+i['name']+"---名字输入不正确,请检查")
+          loot_data.extend(loot_data_temp)     
+      for i in loot_data:
+        models.DKPLoot.objects.create(item=i['item'],belong=i['belong'],dkp=i['dkp'],Player=i['name'], time=str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))
+        models.playerDKP.objects.filter(name=i['name'],belong=i['belong']).update(dkp=F('dkp')-int(i['dkp']))
     else:
       print(obj.errors)
-  
   return HttpResponse('OK')
   
 def edit(request,act):

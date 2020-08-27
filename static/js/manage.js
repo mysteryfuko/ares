@@ -18,6 +18,14 @@ function report_ajax(){
     }
     );
 }
+function refreshLink(){
+  if(typeof $WowheadPower == 'undefined'){
+      $.getScript('//wow.zamimg.com/widgets/power.js');
+  } else {
+      $WowheadPower.refreshLinks();
+  }
+}
+
 var do_status
 function report_status_ajax(){
   $.post("/ajax/do_status_report/",
@@ -78,7 +86,13 @@ function get_load(){
     if(activeTab =="#user_list"){
       get_name_list()
     }
-    if(activeTab == "#loot"){
+    if(activeTab =="#LootDel"){
+      get_loot()
+      $("#LootTableList").click(function(){
+        get_loot()
+      });
+    }
+    if(activeTab == "#loot"){      
       get_name("#new-add-name","#suggest_loot_ul","/api/getuser/");
       $("#new-add-item").keyup(function(){
         //如果文本框为空，不发送请求
@@ -119,6 +133,8 @@ function get_load(){
 
   });
 } 
+
+
 function delUser(id,user){
   if(window.confirm('你确定要删除'+user+'吗？')){
     $.ajax({
@@ -165,7 +181,33 @@ function get_list(){
       }
     });
 }
-
+function delLoot(id,user){
+  if(window.confirm('你确定要删除'+user+'的拾取吗？')){
+    $.ajax({
+      type:"post",
+      url :"/api/delLoot/",
+      data: {"id":id,'csrfmiddlewaretoken': csrf},
+      datatype:"json",
+      success:function(result){
+        get_loot();
+    }});
+  }else{
+      return false;
+  }
+}
+function get_loot(){
+  $.ajax({
+    type:"post",data:{'belong':$('#LootTableList option:selected').val(),'csrfmiddlewaretoken': csrf},url:"/api/dkploot/",success:function(data){
+      $("#LootList").empty();
+        var obj_json = JSON.parse(data);
+        obj_json = obj_json.data
+        for(var i in obj_json){
+          $("#LootList").append("<tr><td>"+obj_json[i].time+"</td><td><a href=\"https://cn.classic.wowhead.com/item="+obj_json[i].item+"\" class=\"icontinyl q4\" data-wh-icon-added=\"true\" ><span></span></a></td><td class='"+obj_json[i].class+"'>"+obj_json[i].name+"</td><td>"+obj_json[i].dkp+"</td><td><a href=\"javascript:delLoot(" + obj_json[i].id +",'"+obj_json[i].name +"')\">删除</a></td></tr>")
+        }
+        refreshLink()
+      }
+    });
+}
 function get_name_list(){
   $("#User_List.table>tbody").empty();
   $.ajax({

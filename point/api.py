@@ -5,6 +5,31 @@ from django.db.models import F,Q
 from .report import DoReport
 
 def index(request,act):
+  if act == "delLoot":
+    id = request.POST['id']
+    LootInfo = models.DKPLoot.objects.filter(id=id).get()
+    models.playerDKP.objects.filter(name=LootInfo.Player,belong=LootInfo.belong).update(dkp=F('dkp')+int(LootInfo.dkp)) #还原分数
+    models.DKPLoot.objects.filter(id=id).delete()
+    return HttpResponse("ok")
+
+  if act == "dkploot":
+    belong = request.POST['belong']
+    dkp_loot = models.DKPLoot.objects.filter(belong=belong).all().order_by('-id')[0:50]
+    json_list = []
+    for i in dkp_loot:
+      json_dict = {}
+      json_dict["id"] = i.id
+      json_dict["item"] = i.item
+      json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
+      json_dict["dkp"] = i.dkp
+      json_dict["name"] = i.Player
+      try:
+        json_dict["class"] = models.playerDKP.objects.get(name=i.Player,belong=belong).job
+      except BaseException:
+        json_dict["class"] = "WARRIOR"
+      json_list.append(json_dict)
+    data ={"data":json_list}
+    return HttpResponse(json.dumps(data))
 
   if act =="getitem":
     item = request.POST['item']
