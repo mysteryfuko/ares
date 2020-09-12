@@ -152,6 +152,22 @@ function delUser(id,user){
       return false;
   }
 }
+
+function delNotice(id){
+  if(window.confirm('你确定要删除该条公告吗？')){
+    $.ajax({
+      type:"post",
+      url :"/api/delNotice/",
+      data: {"id":id,'csrfmiddlewaretoken': csrf},
+      datatype:"json",
+      success:function(result){
+      get_notice();
+    }});
+  }else{
+      return false;
+  }
+}
+
 function delxiaohao(id,user){
   if(window.confirm('你确定要删除'+user+'的关联吗？')){
     $.ajax({
@@ -228,10 +244,9 @@ function get_notice(){
   $.ajax({
     type:"post",data:{'csrfmiddlewaretoken': csrf},url:"/ajax/getnotice/",success:function(data){
       $("#NoticeList").empty();
-        var obj_json = JSON.parse(data); 
-        console.log(obj_json.data)       
+        var obj_json = JSON.parse(data);      
         for(var i in obj_json.data){
-          $("#NoticeList").append("<tr><td>"+obj_json.data[i].time+"</td><td>"+obj_json.data[i].content+"</td></tr>")
+          $("#NoticeList").append("<tr><td>"+obj_json.data[i].time+"</td><td>"+obj_json.data[i].content+"</td><td><a href=\"javascript:delNotice(" + obj_json.data[i].id +")\">删除</a></td></tr>")
           
         }
       }

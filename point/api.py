@@ -178,6 +178,11 @@ def index(request,act):
     except BaseException:
       return HttpResponse("error!")
     return HttpResponse("done")
+    
+  if act == "delNotice":
+    id = request.POST['id']
+    models.Noitces.objects.filter(id=id).delete()
+    return HttpResponse("ok")
 
 def ajax(request,action):
     
@@ -186,6 +191,7 @@ def ajax(request,action):
     json_list = []
     for i in notce_list:
       json_dict = {}
+      json_dict["id"] = i.id
       json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
       json_dict["content"] = i.content.replace("\n","<br />")
       json_list.append(json_dict)

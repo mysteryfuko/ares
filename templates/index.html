@@ -26,6 +26,7 @@
     {% for i in dkp %}
     <button class="tablinks dkp" id="{{i.id}}">{{i.name}}</button>
     {% endfor %}
+    <button class="tablinks tab" id="rules" >公会制度</button> 
     <button class="tablinks tab" id="notice" onclick="selectTab(event, 'noticeTab')">公告记录</button> 
   </div>
 
@@ -33,6 +34,11 @@
     <button class="tablinks tab" onclick="selectTab(event, 'EpgpTab','score')">EPGP</button>
     <button class="tablinks tab" onclick="selectTab(event, 'EpgpAddTab','loot')">EPGP拾取记录</button>
     <button class="tablinks tab" onclick="selectTab(event, 'EpgpLootTab','add')">EPGP奖励记录</button> 
+  </div>
+
+  <div class = "tab" id="rulesList" style="display:none">
+    <button class="tablinks dkp_rules" style="text-align: center;" onclick="window.open('rules/bwl')">BWL制度</button>
+    <button class="tablinks dkp_rules" style="text-align: center;" onclick="window.open('rules/taq')">TAQ制度</button>
   </div>
 
   <div class = "tab" id="TabDKP" style="display:none">

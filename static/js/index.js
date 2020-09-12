@@ -384,6 +384,7 @@ function selectTab(event, name,act,e) {
       $("#TabEPGP").show();
       $(this).addClass("active");
       $("#TabDKP").hide();
+      $("#rulesList").hide();
     });
 
     $("#notice").mouseover(function(){
@@ -391,6 +392,18 @@ function selectTab(event, name,act,e) {
       for (i = 0; i < tablinks.length; i++) {
           tablinks[i].className = tablinks[i].className.replace(" active", "");
       }
+      $("#TabEPGP").hide();
+      $(this).addClass("active");
+      $("#TabDKP").hide();
+      $("#rulesList").hide();
+    });
+
+    $("#rules").mouseover(function(){
+      tablinks = $(".tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      $("#rulesList").show();
       $("#TabEPGP").hide();
       $(this).addClass("active");
       $("#TabDKP").hide();
@@ -404,6 +417,7 @@ function selectTab(event, name,act,e) {
       $(this).addClass("active");
       $("#TabEPGP").hide();
       $("#TabDKP").show();
+      $("#rulesList").hide();
       var id = $(this).attr("id");
       var name = $(this).text();
       $(".score").html(name+"分数");

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, FileResponse
+from requests.api import request
 from . import models
 import json
 from django.db.models import Sum
@@ -56,6 +57,13 @@ def down_dkp(request):
 def PlayerDetail(request,name):
   dkp = models.DKPtable.objects.all()
   return render(request,'PlayerDetail.html',{'dkp':dkp,'name':name})
+
+def rules(request,id):
+  if id== "taq":
+    url = "https://docs.qq.com/sheet/DQ1ZNTUZuSk5nSHFr"
+  if id== "bwl":
+    url = ""
+  return render(request,'rules.html',{'id':id,'url':url})
 
 def kill(request,act,bossid):
   point_dkp = 0

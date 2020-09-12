@@ -11,6 +11,7 @@ manage_patterns = [
 
 urlpatterns = [
     path('', views.index),
+    path('rules/<str:id>', views.rules),
     path('ajax/<str:action>/',api.ajax),
     path('api/<str:act>/',api.index),
     path('wxapi/<str:action>/',api.wxapi),
