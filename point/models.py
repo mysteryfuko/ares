@@ -54,3 +54,8 @@ class status(models.Model):
   loading = models.TextField()
   loadingNum = models.FloatField(max_length=5)
   fight_id = models.CharField(max_length=40)
+
+class Noitces(models.Model):
+  time = models.DateTimeField()
+  content = models.TextField()
+

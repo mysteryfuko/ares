@@ -15,9 +15,30 @@ function selectTab(event, name,act,e) {
     if (event) {
         event.currentTarget.className += " active";
     }
-    get_data(act,e,name);
+    
+    if (act){
+      get_data(act,e,name);
+    }else{
+      get_notice();
+    }
   }
-  
+
+  function get_notice(){
+    var noticeTable = $('#noticeTable').DataTable({
+      pageLength: 50,
+      destroy:true,
+      order: [ [ 0, 'desc' ] ],
+      "ajax": {
+        url:"ajax/getnotice",
+        dataSrc: "data",
+      },
+      "columns":[
+        {data:"time"},
+        {data:"content"},
+      ],
+    });  
+  }
+
   function get_data(act,e,name){
     if(e){
       if(act == "score"){
@@ -364,6 +385,17 @@ function selectTab(event, name,act,e) {
       $(this).addClass("active");
       $("#TabDKP").hide();
     });
+
+    $("#notice").mouseover(function(){
+      tablinks = $(".tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      $("#TabEPGP").hide();
+      $(this).addClass("active");
+      $("#TabDKP").hide();
+    });
+
     $(".dkp").mouseover(function(){
       tablinks = $(".tablinks");
       for (i = 0; i < tablinks.length; i++) {

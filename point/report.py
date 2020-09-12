@@ -110,7 +110,7 @@ class DoReport:
       if i:
         if i in c:
           all_name = all_name + i +","
-    temp = {'boss':"全程分",'name':all_name,'dkp':self.jiesan,'time':player_data[(a-1)]["time"]}
+    temp = {'boss':"全程分",'name':all_name,'dkp':self.jiesan,'time':player_data[(a-1)]["time"]+60000}
     where_to_do += "已完成分析全程分,共计{}人</br>".format(player_num)
     status_num += 1
     self.set_status(where_to_do,status_num/DataListNum,fight_id)

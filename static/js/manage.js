@@ -86,6 +86,9 @@ function get_load(){
     if(activeTab =="#user_list"){
       get_name_list()
     }
+    if(activeTab =="#Notice"){
+      get_notice()
+    }
     if(activeTab =="#LootDel"){
       get_loot()
       $("#LootTableList").click(function(){
@@ -220,7 +223,20 @@ function get_name_list(){
       }
     });
 }
-
+function get_notice(){
+  $("#NoticeList").empty();
+  $.ajax({
+    type:"post",data:{'csrfmiddlewaretoken': csrf},url:"/ajax/getnotice/",success:function(data){
+      $("#NoticeList").empty();
+        var obj_json = JSON.parse(data); 
+        console.log(obj_json.data)       
+        for(var i in obj_json.data){
+          $("#NoticeList").append("<tr><td>"+obj_json.data[i].time+"</td><td>"+obj_json.data[i].content+"</td></tr>")
+          
+        }
+      }
+    });
+}
 function get_name(e,a,url){
 //e=>inputbox
 //a => selecet box
@@ -393,5 +409,17 @@ $(document).ready(function(){
     }
     );
   });
+
+  $("#submit_notice").click(function(){    
+    $.post("/api/pull_notice/",
+    {
+      content:$("#notice_content").val(),'csrfmiddlewaretoken': csrf
+    },function(data,status){
+      alert("发布成功");
+      get_notice();
+    }
+    );
+  });
+
 
 });

@@ -13,6 +13,7 @@ urlpatterns = [
     path('', views.index),
     path('ajax/<str:action>/',api.ajax),
     path('api/<str:act>/',api.index),
+    path('wxapi/<str:action>/',api.wxapi),
     path('PlayerDetail/<str:name>/',views.PlayerDetail),
     path('kill/<str:act>/<int:bossid>/',views.kill),
     path('manage/',include(manage_patterns)), 

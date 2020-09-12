@@ -16,6 +16,7 @@
     <script src="https://wow.zamimg.com/widgets/power.js"></script>
     <script src="{% static 'js/index.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+	<link rel="shortcut icon" href=" static/favicon.ico" />
 </head>
 <body>
 <div class="container">
@@ -25,6 +26,7 @@
     {% for i in dkp %}
     <button class="tablinks dkp" id="{{i.id}}">{{i.name}}</button>
     {% endfor %}
+    <button class="tablinks tab" id="notice" onclick="selectTab(event, 'noticeTab')">公告记录</button> 
   </div>
 
   <div class = "tab" id="TabEPGP" style="display:none">
@@ -163,8 +165,32 @@
       </tfoot>
     </table>
   </div>
+
+  <div id="noticeTab" class="tabcontent">
+    <table id="noticeTable" class="display" style="width:100%">
+      <thead>
+        <tr>
+            <th style="width:20%">时间</th>
+            <th>内容</th>
+        </tr>
+      </thead>                 
+      <tfoot>
+        <tr>
+          <th style="width:20%">时间</th>
+          <th>内容</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
 </div>
-<div class="footer"><a href="http://www.miitbeian.gov.cn">蜀ICP备20020462号</a></div>
+<div class="footer">
+<a href="http://www.miitbeian.gov.cn">蜀ICP备20020462号</a>
+		 	<div style="width:300px;margin:0 auto; padding:20px 0;">
+		 		<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=51070302110447" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="static/gongan.png" style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">川公网安备 51070302110447号</p></a>
+		 	</div>
+		 
+</div>
 </body>
 
 </html>

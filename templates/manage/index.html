@@ -32,6 +32,7 @@
       <li><a href="#down" data-toggle="tab">数据下载</a></li>
       <li><a href="#user_list" data-toggle="tab">名单编辑</a></li>
       <li><a href="#LootDel" data-toggle="tab">拾取删除</a></li>
+      <li><a href="#Notice" data-toggle="tab">公告编辑</a></li>
     </ul>
     <div id="myTabContent" class="tab-content">
 
@@ -228,6 +229,31 @@
         下载下来的文件放在<div style="color:red;display:inline">_classic_\WTF\Account\你的账号\SavedVariables</div>下覆盖原文件。</br>
         EPGP文件名：<div style="color:red;display:inline">AirjEPGP.lua</div></br>
         DKP文件名：<div style="color:red;display:inline">WebDKP.lua</div>
+      </div>
+
+      <div class="tab-pane fade" id="Notice">
+        <textarea class="form-control" id="notice_content" name="notice_content" rows="4" style="margin-top:50px;max-width: 50%"></textarea>
+        <button class="btn btn-primary" id="submit_notice" style="margin-top: 10px;">发布</button>
+
+        <div id="Notice_List" style="margin-top:20px">
+          <table class="table table-bordered table-hover" style="width:100%">
+            <thead>
+              <tr>
+                <th>时间</th>
+                <th>内容</th>
+              </tr>
+            </thead>  
+            <tbody id="NoticeList">
+            </tbody>              
+            <tfoot>
+              <tr>
+                <th>时间</th>
+                <th>内容</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
       </div>
 
       <div class="tab-pane fade" id="LootDel">
