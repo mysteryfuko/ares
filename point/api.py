@@ -178,7 +178,7 @@ def index(request,act):
     except BaseException:
       return HttpResponse("error!")
     return HttpResponse("done")
-    
+
   if act == "delNotice":
     id = request.POST['id']
     models.Noitces.objects.filter(id=id).delete()
@@ -337,7 +337,7 @@ def ajax(request,action):
       json_dict["dkp"] = i.dkp
       json_dict["time"] = i.time.strftime("%Y-%m-%d %H:%M:%S")
       playerNum = len(i.Player.split(','))-1
-      if playerNum == 0:
+      if playerNum == 0 and i.Player:
         playerNum = 1
       json_dict["player"] = playerNum
       json_list.append(json_dict)
@@ -451,7 +451,7 @@ def wxapi(request,action):
       json_dict["dkp"] = i.dkp
       json_dict["time"] = i.time.strftime("%Y-%m-%d")
       playerNum = len(i.Player.split(','))-1
-      if playerNum == 0:
+      if playerNum == 0 and i.Player:
         playerNum = 1
       json_dict["player"] = playerNum
       json_list.append(json_dict)
